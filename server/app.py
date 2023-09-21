@@ -1,7 +1,9 @@
+from dotenv import load_dotenv
 import os
 
-from dotenv import load_dotenv
 load_dotenv()
+print(os.environ.get('DATABASE_URI'))
+
 
 from flask import Flask, jsonify, request, make_response, render_template
 from flask_migrate import Migrate
@@ -16,13 +18,12 @@ app = Flask(
     template_folder='../client/build'
 )
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI', 'Not Set')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.json.compact = False
 
 migrate = Migrate(app, db)
 db.init_app(app)
-
 @app.errorhandler(404)
 def not_found(e):
     return render_template("index.html")
